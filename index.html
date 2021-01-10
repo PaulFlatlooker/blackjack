@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Blackjack</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="index.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="text-center">Bienvenue au Casino</h2>
+      <div id="status-bar" class="alert" role="alert">
+      </div>
+      <h3>Dealer</h3>
+      <p>
+        Cartes :
+        <span id="dealer-cards"></span>
+      </p>
+      <p>
+        Score :
+        <span id="dealer-score">0</span>
+      </p>
+      <h3>Josselin</h3>
+      <p>
+        Cartes :
+        <span id="user-cards"></span>
+      </p>
+      <p>
+        Score :
+        <span id="user-score">0</span>
+      </p>
+      <p>
+        Argent :
+        <span id="user-bank">100</span>
+      </p>
+      <button id="user-skips" onclick="userSkips()" class="d-none">
+        Passer
+      </button>
+      <button
+        id="user-draws-card"
+        onclick="userDrawsCard()"
+        class="d-none"
+      >
+        Carte
+      </button>
+      <button
+        id="place-bet"
+        onclick="placeBet(10)"
+      >
+        Parier 10
+      </button>
+    </div>
+  </body>
+</html>
