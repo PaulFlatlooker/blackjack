@@ -12,46 +12,74 @@
   </head>
   <body>
     <div class="container">
-      <h2 class="text-center">Bienvenue au Casino</h2>
-      <div id="status-bar" class="alert" role="alert">
-      </div>
-      <h3>Dealer</h3>
-      <p>
-        Cartes :
-        <span id="dealer-cards"></span>
-      </p>
-      <p>
-        Score :
-        <span id="dealer-score">0</span>
-      </p>
-      <h3>Josselin</h3>
-      <p>
-        Cartes :
-        <span id="user-cards"></span>
-      </p>
-      <p>
-        Score :
-        <span id="user-score">0</span>
-      </p>
-      <p>
+      <h2 class="text-center mt-3">Bienvenue au Casino !</h2>
+      <div class="alert alert-dark" role="alert">
         Argent :
-        <span id="user-bank">100</span>
-      </p>
-      <button id="user-skips" onclick="userSkips()" class="d-none">
+        <span id="user-bank" class="float-right">100 €</span>
+      </div>
+      <h4 class="text-center">Dealer</h4>
+      <div class="row">
+        <div class="col">
+          <div class="text-center">
+            <h6>Cartes</h6>
+          </div>
+          <h5 id="dealer-cards" class="text-center">
+            &nbsp;
+          </h5>
+        </div>
+        <div class="col">
+          <div class="text-center">
+            <h6>Score</h6>
+          </div>
+          <h4 id="dealer-score" class="text-center">
+            0
+          </h4>
+        </div>
+      </div>
+      <h4 class="mt-4 text-center">Josselin</h4>
+      <div class="row mb-3">
+        <div class="col">
+          <div class="text-center">
+            <h6>Cartes</h6>
+          </div>
+          <h5 id="user-cards" class="text-center">
+            &nbsp;
+          </h5>
+        </div>
+        <div class="col">
+          <div class="text-center">
+            <h6>Score</h6>
+          </div>
+          <h4 id="user-score" class="text-center">
+            0
+          </h4>
+        </div>
+      </div>
+
+      <div id="status-bar" class="alert" role="alert"></div>
+      <button
+        id="place-bet"
+        onclick="placeBet(10)"
+        class="btn btn-primary btn-block "
+      >
+        Parier 10 €
+      </button>
+      <button id="user-skips" onclick="userSkips()" class="d-none btn btn-secondary btn-block">
         Passer
       </button>
       <button
         id="user-draws-card"
         onclick="userDrawsCard()"
-        class="d-none"
+        class="d-none btn btn-primary btn-block"
       >
         Carte
       </button>
       <button
-        id="place-bet"
-        onclick="placeBet(10)"
+        id="user-restart"
+        onclick="document.location.reload()"
+        class="d-none btn btn-primary btn-block"
       >
-        Parier 10
+        Rejouer
       </button>
     </div>
   </body>

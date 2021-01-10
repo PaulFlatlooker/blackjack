@@ -64,18 +64,19 @@ function updateDisplay() {
   $("#dealer-score").html(window.dealer.score);
   $("#user-cards").html(window.user.cards.join(" · "));
   $("#user-score").html(window.user.score);
-  $("#user-bank").html(window.user.bank);
+  $("#user-bank").html(`${window.user.bank} €`);
   updateStatusBar();
 }
 
 function updateStatusBar() {
   hash = {
-    idle: {class: "alert alert-dark", text: "faites vos jeux"},
-    ongoing: {class: "alert alert-primary", text: "jeu en cours"},
-    dealer: {class: "alert alert-primary", text: "le dealer joue"},
-    won: {class: "alert alert-success", text: "gagné !"},
-    lost: {class: "alert alert-danger", text: "perdu"},
-    tie: {class: "alert alert-warning", text: "égalité"}
+    idle: {class: "alert alert-info", text: "Faites vos jeux !"},
+    ongoing: {class: "alert alert-primary", text: "À votre tour."},
+    dealer: {class: "alert alert-primary", text: "Le dealer joue..."},
+    won: {class: "alert alert-success", text: "Vous avez gagné !"},
+    lost: {class: "alert alert-danger", text: "Vous avez perdu cette partie."},
+    tie: {class: "alert alert-warning", text: "Égalité."},
+    bankrupt: {class: "alert alert-dark", text: "Vous êtes ruiné !"}
   };
 
   $("#status-bar").removeClass();
@@ -84,15 +85,27 @@ function updateStatusBar() {
 }
 
 function updateActions(){
-  if (window.game.status == 'ongoing'){
-    $("#user-draws-card").removeClass("d-none")
-    $("#user-skips").removeClass("d-none");
+  if (window.game.status == "ongoing") {
     $("#place-bet").addClass("d-none");
-  } else {
+    $("#user-draws-card").removeClass("d-none");
+    $("#user-skips").removeClass("d-none");
+    return
+  } else if (window.game.status == "dealer") {
+    $("#place-bet").addClass("d-none");
     $("#user-draws-card").addClass("d-none");
     $("#user-skips").addClass("d-none");
-    $("#place-bet").removeClass("d-none");
+    return;
+  } else if (window.game.status == "bankrupt"){
+    $("#place-bet").addClass("d-none");
+    $("#user-draws-card").addClass("d-none");
+    $("#user-skips").addClass("d-none");
+    $("#user-restart").removeClass("d-none");
+    return
   }
+
+  $("#place-bet").removeClass("d-none");
+  $("#user-draws-card").addClass("d-none");
+  $("#user-skips").addClass("d-none");
 }
 
 function startGame() {
@@ -111,46 +124,39 @@ function userDrawsCard(){
 
 function userSkips(){
   window.game.status = "dealer"
-  console.log("start dealer actions")
-  startDealerActions()
+  updateState();
+  startDealerActions();
 }
 
-function startDealerActions() {
-  console.log('user score')
-  console.log(user.score)
-  console.log('dealer score')
-  console.log(dealer.score)
-  while (dealerShouldDraw()) {
-    console.log("dealer should draw");
+async function startDealerActions() {
+  while (dealerShouldDraw() && !hasLost(window.dealer)) {
+    await sleep(500)
     dealerDraws();
-    console.log("dealer has drawn");
-    updateState();
-    console.log(window.dealer.score)
-    sleep(500);
+    await sleep(1000)
   }
-  if (user.score < dealer.score){
-    userLoses()
-  } else if (user.score > dealer.score){
-    userWins
-    payUser;
-  } else {
-    userHasTie()
-    payUser;
-  }
-  updateState()
+  handleEndGame();
 }
 
 function dealerShouldDraw(){
-  return (
-    window.dealer.score < 17 ||
-    !hasLost(window.dealer)
-  )
+  return (window.dealer.score < 17);
 }
 
 function dealerDraws(){
   window.dealer.cards.push(drawCard());
-  updateScores();
-  updateState()
+  updateState();
+}
+
+function handleEndGame() {
+  if (hasLost(window.dealer) || user.score > dealer.score) {
+    userWins();
+    payUser();
+  } else if (user.score === dealer.score) {
+    userHasTie();
+    payUser();
+  } else {
+    userLoses();
+  }
+  updateState();
 }
 
 function hasLost(user){
@@ -167,6 +173,9 @@ function userHasTie() {
 
 function userLoses(){
   window.game.status = "lost";
+  if (user.bank === 0){
+    window.game.status = "bankrupt"
+  }
 }
 
 function payUser(){
@@ -193,10 +202,6 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
